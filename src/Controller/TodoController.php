@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,13 +24,35 @@ class TodoController extends AbstractController
                 'correction' => 'corriger mes examens'
             ];
             $session->set('todos', $todos);
+            $this->addFlash('info', "La liste des todos vient d'être initialisée");
         }
+
         return $this->render('todo/index.html.twig');
     }
 
-    #[Route('todo/{name}/{content}', name: 'todo.add')]
-    public function addTodo(Request $request, $name, $content) {
+    #[Route('todo/add/{name}/{content}', name: 'todo.add')]
+    public function addTodo(Request $request, $name, $content): RedirectResponse {
+        $session = $request->getSession();
         // Vérifier si le tableau de todo est dans la session
-        
+        if ($session->has('todos')) {
+            // si oui
+            // Vérifier si on a déjà un todo avec le même name
+            $todos = $session->get('todos');
+            if (isset($todos[$name])) {
+                // si oui afficher erreur
+                $this->addFlash('error', "Le todo d'id $name existe déjà dans la liste");
+            } else {
+                // sinon on l'ajoute et affiche un message
+                $todos[$name] = $content;
+                $this->addFlash('success', "Le todo d'id $name a été ajouté avec succès");
+                $session->set('todos', $todos);
+            }
+        } else {
+            // sinon afficher une erreur et rediriger vers controlleur index
+            $this->addFlash('error', "La liste des todos n'est pas encore initialisée");
+        }
+
+        return $this->redirectToRoute('todo');
+
     }
 }
