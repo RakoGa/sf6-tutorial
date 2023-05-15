@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SessionController extends AbstractController
 {
-    #[Route('/session', name: 'app_session')]
+    #[Route('/session', name: 'session')]
     public function index(Request $request): Response
     {
         // session_start() en PHP
