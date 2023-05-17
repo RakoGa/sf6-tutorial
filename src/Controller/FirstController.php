@@ -9,6 +9,17 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class FirstController extends AbstractController
 {
+
+    // route générique qui apparaît en priorité
+    // #[Route('{maVar}', name: 'test.order.route')]
+    // public function testOrderRoute($maVar): Response {
+    //     return new Response($maVar);
+    // }
+    #[Route('/order/{maVar}', name: 'test.order.route')]
+    public function testOrderRoute($maVar): Response {
+        return new Response("<html><body>$maVar</body></html>");
+    }
+
     #[Route('/first', name: 'first')]
     public function index(): Response
     {
@@ -26,5 +37,16 @@ class FirstController extends AbstractController
             'name' => $name,
             'firstname' => $firstname
         ]);
+    }
+
+    // ou 'multi/{entier1<\d+>}/{entier2<\d+>}'
+    #[Route(
+        'multi/{entier1}/{entier2}',
+        name: 'multiplication',
+        requirements: ['entier1' => '\d+', 'entier2' => '\d+']
+    )]
+    public function multiplication($entier1, $entier2): Response {
+        $resultat = $entier1 * $entier2;
+        return new Response("<h1>$resultat</h1>");
     }
 }
