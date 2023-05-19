@@ -10,8 +10,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class SessionController extends AbstractController
 {
     #[Route('/session', name: 'session')]
-    public function index(Request $request): Response
-    {
+    public function index(Request $request): Response {
+        
         // session_start() en PHP
         $session = $request->getSession();
         if ($session->has('nbVisite')) {
