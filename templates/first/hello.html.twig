@@ -9,5 +9,6 @@
 <body>
     <h1>Hello {{firstname | capitalize}} {{name | capitalize}}</h1>
     <p>Aujourd'hui, on est le {{ "now" | date("d/m/Y")}}</p>
+    <img src="{{ asset('assets/images/') ~ path | defaultImage }}" alt="">
 </body>
 </html>
