@@ -10,11 +10,17 @@ use Symfony\Component\Routing\Annotation\Route;
 class FirstController extends AbstractController
 {
 
-    // route générique qui apparaît en priorité
+    
     // #[Route('{maVar}', name: 'test.order.route')]
     // public function testOrderRoute($maVar): Response {
     //     return new Response($maVar);
     // }
+    #[Route('/template/', name: 'template')]
+    public function template() {
+        return $this->render('template.html.twig');
+    }
+
+    // route générique qui apparaît en priorité
     #[Route('/order/{maVar}', name: 'test.order.route')]
     public function testOrderRoute($maVar): Response {
         return new Response("<html><body>$maVar</body></html>");

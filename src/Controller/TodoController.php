@@ -12,8 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class TodoController extends AbstractController
 {
     #[Route('/', name: 'todo')]
-    public function index(Request $request): Response
-    {
+    public function index(Request $request): Response {
         $session = $request->getSession();
         // Afficher tableau de todo
         // si tableau dans ma session, je ne fais que l'afficher
