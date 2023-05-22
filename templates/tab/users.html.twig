@@ -5,11 +5,14 @@
 {% block PageTitle %}Users{% endblock %}
 
 {% block body %}
+    {% include "fragments/date-jour.html.twig" %}
+
     <table class="table">
         <tr class="table-active">
             <th>First name</th>
             <th>Name</th>
             <th>Age</th>
+            <td>Message</td>
         </tr>
 
         {% for user in users %}
@@ -22,6 +25,7 @@
                     <td>{{ user.firstname }}</td>
                     <td>{{ user.name }}</td>
                     <td>{{ user.age }}</td>
+                    <td>{{ render(controller('App\\Controller\\FirstController::sayHello', {firstname: user.firstname, name: user.name, age: user.age}))}}</td>
                 </tr>
         {% endfor %}
     </table>
