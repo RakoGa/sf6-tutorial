@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Personne;
 use Doctrine\Persistence\ManagerRegistry;
+use PhpParser\Comment\Doc;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -66,13 +68,29 @@ class PersonneController extends AbstractController
         $personne2->setAge('24');
 
         // Ajouter l'opéraation d'insertion de la personne dans la transaction
-        $entityManager->persist($personne);
-        $entityManager->persist($personne2);
+        // $entityManager->persist($personne);
+        // $entityManager->persist($personne2);
 
         // Exécute la transaction
         $entityManager->flush();
         return $this->render('personne/detail.html.twig', [
             'personne' => $personne
         ]);
+    }
+
+    #[Route('/delete/{id<\d+>}', name: 'personne.delete')]
+    public function deletePersonne(Personne $personne = null, ManagerRegistry $doctrine): RedirectResponse {
+        if ($personne) {
+            $manager = $doctrine->getManager();
+            // Ajoute la fonction de suppression dans la transaction
+            $manager->remove($personne);
+            // Exécuter la suppression
+            $manager->flush();
+            $this->addFlash('success', 'La personne a été supprimée avec succès.');
+        } else {
+            $this->addFlash('error', 'Personne inexistante.');
+        }
+
+        return $this->redirectToRoute('personne.list.all');
     }
 }

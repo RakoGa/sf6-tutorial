@@ -11,6 +11,7 @@
                     <h6 class="card-subtitle mb-2 text-muted">{{ personne.firstname }} {{ personne.name }}</h6>
                     <p class="card-text">Age: {{ personne.age }}</p>
                     <a href="{{ path('personne.detail', {id: personne.id}) }}" class="card-link">Détails</a>
+                    <a href="{{ path('personne.delete', {id: personne.id}) }}" class="card-link">Supprimer</a>
                 </div>
             </div>
         {% endfor %}
@@ -21,7 +22,7 @@
             <nav aria-label="col Page navigation example">
                 <ul class="pagination">
                     {% if page != 1 %}
-                        <li class="page-item"><a class="page-link" href="{{ path('personne.list.all', {page: page - 1, nbElem: nbElem})}}">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="{{ path('personne.list.all', {page: page - 1, nbElem: nbElem})}}">Précédent</a></li>
                     {% endif %}
                     
                     {% for i in range(1, nbPage) %}
@@ -29,7 +30,7 @@
                     {% endfor %}
 
                     {% if page != nbPage %}
-                        <li class="page-item"><a class="page-link" href="{{ path('personne.list.all', {page: page + 1, nbElem: nbElem})}}">Next</a></li>
+                        <li class="page-item"><a class="page-link" href="{{ path('personne.list.all', {page: page + 1, nbElem: nbElem})}}">Suivant</a></li>
                     {% endif %}
                     
                 </ul>
