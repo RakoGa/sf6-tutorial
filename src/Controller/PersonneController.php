@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Personne;
 use Doctrine\Persistence\ManagerRegistry;
+use Faker\Provider\ar_JO\Person;
 use PhpParser\Comment\Doc;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -92,5 +93,24 @@ class PersonneController extends AbstractController
         }
 
         return $this->redirectToRoute('personne.list.all');
+    }
+
+    #[Route('/update/{id<\d+>}/{name}/{firstname}/{age}', name: 'personne.update')]
+    public function updatePersonne(Personne $personne = null, ManagerRegistry $doctrine, $name, $firstname, $age): Response {
+        if ($personne) {
+            $personne->setName($name);
+            $personne->setFirstname($firstname);
+            $personne->setAge($age);
+            $manager = $doctrine->getManager();
+            $manager->persist($personne);
+
+            $manager->flush();
+            $this->addFlash('success', 'La personne a été mise à jour avec succès.');
+        } else {
+            $this->addFlash('error', 'Personne inexistante.');
+        }
+
+        return $this->redirectToRoute('personne.list.all');
+
     }
 }
