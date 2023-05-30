@@ -79,8 +79,8 @@ class PersonneController extends AbstractController
     {
         $entityManager = $doctrine->getManager();
         $personne = new Personne();
-        $personne->setFirstname('ga');
-        $personne->setName('rako');
+        $personne->setFirstname('camille');
+        $personne->setName('fort');
         $personne->setAge('24');
 
         $personne2 = new Personne();
