@@ -6,6 +6,7 @@ use App\Entity\Personne;
 use Doctrine\Persistence\ManagerRegistry;
 use Faker\Provider\ar_JO\Person;
 use PhpParser\Comment\Doc;
+use App\Form\PersonneType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -78,24 +79,28 @@ class PersonneController extends AbstractController
     public function addPersonne(ManagerRegistry $doctrine): Response
     {
         $entityManager = $doctrine->getManager();
-        $personne = new Personne();
-        $personne->setFirstname('camille');
-        $personne->setName('fort');
-        $personne->setAge('24');
+        // $personne = new Personne();
+        // $personne->setFirstname('camille');
+        // $personne->setName('fort');
+        // $personne->setAge('24');
 
-        $personne2 = new Personne();
-        $personne2->setFirstname('leelah');
-        $personne2->setName('fort');
-        $personne2->setAge('24');
+        // $personne2 = new Personne();
+        // $personne2->setFirstname('leelah');
+        // $personne2->setName('fort');
+        // $personne2->setAge('24');
 
         // Ajouter l'opéraation d'insertion de la personne dans la transaction
         // $entityManager->persist($personne);
         // $entityManager->persist($personne2);
 
+        $personne = new Personne();
+        // $personne est l'image de notre formulaire
+        $form = $this->createForm(PersonneType::class, $personne);
+
         // Exécute la transaction
-        $entityManager->flush();
-        return $this->render('personne/detail.html.twig', [
-            'personne' => $personne
+        // $entityManager->flush();
+        return $this->render('personne/add-personne.html.twig', [
+            'form' => $form->createView()
         ]);
     }
 
