@@ -26,7 +26,7 @@ class PersonneController extends AbstractController
         ]);
     }
 
-    #[Route('/all/age/{ageMin<\d+>}/{ageMax<\d+>}', name: 'personne.list')]
+    #[Route('/all/age/{ageMin<\d+>}/{ageMax<\d+>}', name: 'personne.list.age')]
     public function personnesByAge(ManagerRegistry $doctrine, $ageMin, $ageMax): Response {
         $repository = $doctrine->getRepository(Personne::class);
         $personnes = $repository->findPersonnesByAgeInterval($ageMin, $ageMax);
@@ -35,7 +35,7 @@ class PersonneController extends AbstractController
         ]);
     }
 
-    #[Route('/stats/age/{ageMin<\d+>}/{ageMax<\d+>}', name: 'personne.list')]
+    #[Route('/stats/age/{ageMin<\d+>}/{ageMax<\d+>}', name: 'personne.list.stats')]
     public function statsPersonnesByAge(ManagerRegistry $doctrine, $ageMin, $ageMax): Response {
         $repository = $doctrine->getRepository(Personne::class);
         $stats = $repository->statsPersonnesByAgeInterval($ageMin, $ageMax);
@@ -120,7 +120,7 @@ class PersonneController extends AbstractController
                 $message = " a été mis à jour avec succès.";
             }
             $this->addFlash('success', $personne->getFirstname(). " " .$personne->getName(). $message);
-            return $this->redirectToRoute('/');
+            return $this->redirectToRoute('personne.list');
         } else {
             return $this->render('personne/add-personne.html.twig', [
                 'form' => $form->createView()
