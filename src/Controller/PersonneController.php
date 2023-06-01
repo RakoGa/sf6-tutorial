@@ -99,6 +99,8 @@ class PersonneController extends AbstractController
 
         // Exécute la transaction
         // $entityManager->flush();
+        $form->remove('createdAt');
+        $form->remove('updatedAt');
         return $this->render('personne/add-personne.html.twig', [
             'form' => $form->createView()
         ]);
