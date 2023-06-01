@@ -9,6 +9,7 @@ use PhpParser\Comment\Doc;
 use App\Form\PersonneType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -76,9 +77,9 @@ class PersonneController extends AbstractController
     }
 
     #[Route('/add', name: 'personne.add')]
-    public function addPersonne(ManagerRegistry $doctrine): Response
+    public function addPersonne(ManagerRegistry $doctrine, Request $request): Response
     {
-        $entityManager = $doctrine->getManager();
+        // $entityManager = $doctrine->getManager();
         // $personne = new Personne();
         // $personne->setFirstname('camille');
         // $personne->setName('fort');
@@ -99,11 +100,23 @@ class PersonneController extends AbstractController
 
         // Exécute la transaction
         // $entityManager->flush();
+
         $form->remove('createdAt');
         $form->remove('updatedAt');
-        return $this->render('personne/add-personne.html.twig', [
-            'form' => $form->createView()
-        ]);
+
+        // Le formulaire va aller traiter la requête
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            $manager = $doctrine->getManager();
+            $manager->persist($personne);
+            $manager->flush();
+            $this->addFlash('success', $personne->getFirstname(). " " .$personne->getName(). " a été ajouté avec succès");
+            return $this->redirectToRoute('/');
+        } else {
+            return $this->render('personne/add-personne.html.twig', [
+                'form' => $form->createView()
+            ]);
+        }
     }
 
     #[Route('/delete/{id<\d+>}', name: 'personne.delete')]
