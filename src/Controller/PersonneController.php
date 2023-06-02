@@ -112,7 +112,7 @@ class PersonneController extends AbstractController
 
         // Le formulaire va aller traiter la requête
         $form->handleRequest($request);
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             // https://symfony.com/doc/current/controller/upload_file.html
             $photo = $form->get('photo')->getData();
 
