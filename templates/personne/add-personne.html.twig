@@ -8,3 +8,15 @@
     </div>
     {{ form_rest(form) }}
 {% endblock %}
+
+{% block title %}
+    Éditer une personne
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2();
+        });
+    </script>
+{% endblock %}

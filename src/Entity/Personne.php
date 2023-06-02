@@ -21,6 +21,7 @@ class Personne
     #[ORM\Column]
     private ?int $id = null;
 
+    // https://symfony.com/doc/current/reference/constraints.html
     #[ORM\Column(length: 50)]
     #[Assert\NotBlank(message: "Veuillez renseigner ce champ")]
     #[Assert\Length(min: 2, minMessage: "Le prénom doit avoir au moins 2 caractères")]
