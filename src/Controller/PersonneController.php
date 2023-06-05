@@ -8,6 +8,7 @@ use Faker\Provider\ar_JO\Person;
 use PhpParser\Comment\Doc;
 use App\Form\PersonneType;
 use App\Service\Helpers;
+use App\Service\MailerService;
 use App\Service\UploaderService;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -84,7 +85,12 @@ class PersonneController extends AbstractController
     }
 
     #[Route('/edit/{id<\d+>?0}', name: 'personne.edit')]
-    public function addPersonne(Personne $personne = null,  ManagerRegistry $doctrine, Request $request, UploaderService $uploaderService): Response
+    public function addPersonne(
+        Personne $personne = null,
+        ManagerRegistry $doctrine,
+        Request $request, 
+        UploaderService $uploaderService,
+        MailerService $mailer): Response
     {
         // $entityManager = $doctrine->getManager();
         // $personne = new Personne();
@@ -136,7 +142,9 @@ class PersonneController extends AbstractController
             } else {
                 $message = " a été mis à jour avec succès.";
             }
+            $mailMessage = $personne->getFirstname().' '.$personne->getName().' '.$message;
             $this->addFlash('success', $personne->getFirstname(). " " .$personne->getName(). $message);
+            $mailer->sendEmail(content: $mailMessage);
             return $this->redirectToRoute('personne.list');
         } else {
             return $this->render('personne/add-personne.html.twig', [
