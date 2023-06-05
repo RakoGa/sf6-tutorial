@@ -7,6 +7,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use Faker\Provider\ar_JO\Person;
 use PhpParser\Comment\Doc;
 use App\Form\PersonneType;
+use App\Service\Helpers;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,6 +21,9 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[Route('personne')]
 class PersonneController extends AbstractController
 {
+    public function __construct(private LoggerInterface $logger, private Helpers $helper) {
+    }
+
     #[Route('/', name: 'personne.list')]
     public function index(ManagerRegistry $doctrine): Response {
         $repository = $doctrine->getRepository(Personne::class);
@@ -50,6 +55,7 @@ class PersonneController extends AbstractController
 
     #[Route('/all/{page<\d+>?1}/{nbElem<\d+>?12}', name: 'personne.list.all')]
     public function indexAll(ManagerRegistry $doctrine, $page, $nbElem): Response {
+        echo ($this->helper->sayCoucou());
         $repository = $doctrine->getRepository(Personne::class);
         $nbPersonne = $repository->count([]);
         $nbPage = ceil($nbPersonne / $nbElem);
