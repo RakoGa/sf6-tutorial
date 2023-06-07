@@ -62,7 +62,7 @@ class PersonneController extends AbstractController
 
     #[Route('/all/{page<\d+>?1}/{nbElem<\d+>?12}', name: 'personne.list.all')]
     public function indexAll(ManagerRegistry $doctrine, $page, $nbElem): Response {
-        echo ($this->helper->sayCoucou());
+        // echo ($this->helper->sayCoucou());
         $repository = $doctrine->getRepository(Personne::class);
         $nbPersonne = $repository->count([]);
         $nbPage = ceil($nbPersonne / $nbElem);
@@ -141,14 +141,17 @@ class PersonneController extends AbstractController
                 $personne->setImage($uploaderService->uploadFile($photo, $dir));
             }
 
-            $manager = $doctrine->getManager();
-            $manager->persist($personne);
-            $manager->flush();
             if ($new) {
                 $message = " a été ajouté avec succès.";
+                $personne->setCreatedBy($this->getUser());
             } else {
                 $message = " a été mis à jour avec succès.";
             }
+
+            $manager = $doctrine->getManager();
+            $manager->persist($personne);
+            $manager->flush();
+            
             $mailMessage = $personne->getFirstname().' '.$personne->getName().' '.$message;
             $this->addFlash('success', $personne->getFirstname(). " " .$personne->getName(). $message);
             $mailer->sendEmail(content: $mailMessage);

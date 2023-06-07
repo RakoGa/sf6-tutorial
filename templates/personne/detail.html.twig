@@ -3,6 +3,10 @@
 {% block body %}
     <div class="alert alert-success">
         {{ personne.firstname }} {{ personne.name }}, {{ personne.age }} ans
+        {% if app.user %}
+            <p>Created by: {{ app.user.email }}</p>
+        {% endif %}
+        
     </div>
 {% endblock %}
 
