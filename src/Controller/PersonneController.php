@@ -169,7 +169,10 @@ class PersonneController extends AbstractController
         }
     }
 
-    #[Route('/delete/{id<\d+>}', name: 'personne.delete')]
+    #[
+        Route('/delete/{id<\d+>}', name: 'personne.delete'),
+        IsGranted('ROLE_ADMIN')
+    ]
     public function deletePersonne(Personne $personne = null, ManagerRegistry $doctrine): RedirectResponse {
         if ($personne) {
             $manager = $doctrine->getManager();
