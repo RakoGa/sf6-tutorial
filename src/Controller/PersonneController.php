@@ -12,6 +12,7 @@ use App\Service\MailerService;
 use App\Service\PdfService;
 use App\Service\UploaderService;
 use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,7 +61,10 @@ class PersonneController extends AbstractController
         ]);
     }
 
-    #[Route('/all/{page<\d+>?1}/{nbElem<\d+>?12}', name: 'personne.list.all')]
+    #[
+        Route('/all/{page<\d+>?1}/{nbElem<\d+>?12}', name: 'personne.list.all'),
+        IsGranted("ROLE_USER")
+    ]
     public function indexAll(ManagerRegistry $doctrine, $page, $nbElem): Response {
         // echo ($this->helper->sayCoucou());
         $repository = $doctrine->getRepository(Personne::class);
@@ -110,9 +114,11 @@ class PersonneController extends AbstractController
         // $personne2->setName('fort');
         // $personne2->setAge('24');
 
-        // Ajouter l'opéraation d'insertion de la personne dans la transaction
+        // Ajouter l'opération d'insertion de la personne dans la transaction
         // $entityManager->persist($personne);
         // $entityManager->persist($personne2);
+
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $new = false;
         if (!$personne) {
