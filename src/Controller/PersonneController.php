@@ -20,7 +20,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 // préfixer toutes les routes avec /personne
-#[Route('personne')]
+#[
+    Route('personne'),
+    IsGranted('ROLE_USER')
+]
 class PersonneController extends AbstractController
 {
     public function __construct(private LoggerInterface $logger, private Helpers $helper) {
