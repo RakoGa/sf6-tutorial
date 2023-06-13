@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Personne;
+use App\Event\AddPersonneEvent;
 use Doctrine\Persistence\ManagerRegistry;
 use Faker\Provider\ar_JO\Person;
 use PhpParser\Comment\Doc;
@@ -14,6 +15,7 @@ use App\Service\UploaderService;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +28,10 @@ use Symfony\Component\Routing\Annotation\Route;
 ]
 class PersonneController extends AbstractController
 {
-    public function __construct(private LoggerInterface $logger, private Helpers $helper) {
+    public function __construct(
+        private LoggerInterface $logger, 
+        private Helpers $helper,
+        private EventDispatcherInterface $dispatcher) {
     }
 
     #[Route('/', name: 'personne.list')]
@@ -160,6 +165,12 @@ class PersonneController extends AbstractController
             $manager = $doctrine->getManager();
             $manager->persist($personne);
             $manager->flush();
+
+            if ($new) {
+                // Création de l'évènement
+                $addPersonneEvent = new AddPersonneEvent($personne);
+                $this->dispatcher->dispatch($addPersonneEvent, AddPersonneEvent::ADD_PERSONNE_EVENT);
+            }
             
             $mailMessage = $personne->getFirstname().' '.$personne->getName().' '.$message;
             $this->addFlash('success', $personne->getFirstname(). " " .$personne->getName(). $message);
