@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Personne;
 use App\Event\AddPersonneEvent;
+use App\Event\ListAllPersonnesEvent;
 use Doctrine\Persistence\ManagerRegistry;
 use Faker\Provider\ar_JO\Person;
 use PhpParser\Comment\Doc;
@@ -79,6 +80,8 @@ class PersonneController extends AbstractController
         $nbPersonne = $repository->count([]);
         $nbPage = ceil($nbPersonne / $nbElem);
         $personnes = $repository->findBy([], [], limit: $nbElem, offset: $nbElem * ($page - 1));
+        $listAllPersonneEvent = new ListAllPersonnesEvent(count($personnes));
+        $this->dispatcher->dispatch($listAllPersonneEvent, ListAllPersonnesEvent::LIST_ALL_PERSONNES_EVENT);
         return $this->render('personne/index.html.twig', [
             'personnes' => $personnes,
             'isPaginated' => true,

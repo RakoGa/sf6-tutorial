@@ -26,6 +26,8 @@ services:
     App\EventListener\PersonneListener:
         tags:
             - { name: kernel.event_listener, event: personne.add }
+            - { name: kernel.event_listener, event: personne.list.all, method: onListAllPersonnes }
+            - { name: kernel.event_listener, event: personne.list.all, method: onListAllPersonnes2, priority: 100 }
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
     # App\Service\MailerService:
