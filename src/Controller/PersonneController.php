@@ -174,10 +174,7 @@ class PersonneController extends AbstractController
                 $addPersonneEvent = new AddPersonneEvent($personne);
                 $this->dispatcher->dispatch($addPersonneEvent, AddPersonneEvent::ADD_PERSONNE_EVENT);
             }
-            
-            $mailMessage = $personne->getFirstname().' '.$personne->getName().' '.$message;
             $this->addFlash('success', $personne->getFirstname(). " " .$personne->getName(). $message);
-            $mailer->sendEmail(content: $mailMessage);
             return $this->redirectToRoute('personne.list');
         } else {
             return $this->render('personne/add-personne.html.twig', [
